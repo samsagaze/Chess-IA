@@ -426,5 +426,31 @@ def deplacementpioninfo(i, echiquier):
 
 def deplacementscavalierinfo(i, echiquier):
     dep=[]
-    if
+    if i<48:
+        if i%8!=7:
+            dep+=[i+17]
+        if i%8!=0:
+            dep+=[i+15]
+    if i>15:
+        if i%8!=7:
+            dep+=[i-15]
+        if i%8!=0:
+            dep+=[i-17]
+    if i%8>1:
+        if i<56:
+            dep+=[i+6]
+        if i>7:
+            dep+=[i-10]
+    if i%8<6:
+        if i<56:
+            dep+=[i+10]
+        if i>7:
+            dep+=[i-6]
+    return dep
+
+"""le cavalier se déplacant en L, il faut faire attention aux dépassements des bordures"""
+
+
+
+
 
