@@ -194,9 +194,20 @@ def ddiri(direction, i, echiquier):
     return deplacerpiecesdirectioninfo(directionbis, i, echiquier)
 
 def deplacerpieceechiq(coordsi, coordsj, echiquier):
-        i=Coordechequiennestocoordinfo(coordsi)
-        j=Coordechequiennestocoordinfo(coordsj)
-        deplacerpieceinfo(i, j, echiquier)
+    i=Coordechequiennestocoordinfo(coordsi)
+    j=Coordechequiennestocoordinfo(coordsj)
+    deplacerpieceinfo(i, j, echiquier)
+    return
+
+def deplacerpiecesdirectionechiq(direction, coords, echiquier):
+    i=Coordechequiennestocoordinfo(coords)
+    deplacerpiecesdirectioninfo(direction, i, echiquier)
+    return
+
+def ddire(direction, coords, echiquier):
+    i=Coordechequiennestocoordinfo(coords)
+    ddiri(direction, i, echiquier)
+    return
 
 
 
