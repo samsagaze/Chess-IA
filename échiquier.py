@@ -28,6 +28,25 @@ def Coordechequiennestocoordinfo(coords):
     return (ligne-1)*8+u
 
 
+##description de l'echiquier
+
+"""L'echiquier est representé sous la forme d'une matrice de tableau, donc les cases sont notées de gauche à droite de bas en haut (voir https://docs.google.com/document/d/1ZkEnX1gmuG94cVONLOJKTuy-SHUzwN2psN2XgxNzptE/edit)
+
+Si la case est vide, alors le tableau est vide, sinon le tableau est un doublet dont le premier element correspond à la piece et le second à la couleur
+
+Valeur des pieces :
+    -Pion = "P"
+    -Cavalier = "C"
+    -Fou = "F"
+    -Tour = "T"
+    -Dame/Reine = "D"
+    -Roi = "R"
+
+Valeur des couleurs :
+    - Blanc = "B"
+    - Noir = "N"
+"""
+
 
 ##deplacements elementaires sur l'echiquier
 def avancerunecaseinfo(i):
@@ -112,6 +131,56 @@ def gauce(coords):
 
 ## deplacement elementaire de pieces sur l'echiquier
 
+def deplacerpieceinfo(i, j, echiquier):
+    echiquier[j]=echiquier[i]
+    echiquier[i]=[]
+    return
+
+"""met la pièce de la case i sur la case j"""
+
+def deplacerpiecesdirectioninfo(direction, i, echiquier):
+    if direction=="devant":
+        j=avci(i)
+        if type(j)!=type(0):
+            return "Erreur"
+        deplacerpieceinfo(i, j, echiquier)
+    elif direction=="derriere":
+        j=recci(i)
+        if type(j)!=type(0):
+            return "Erreur"
+        deplacerpieceinfo(i, j, echiquier)
+    elif direction=="gauche":
+        j=gauci(i)
+        if type(j)!=type(0):
+            return "Erreur"
+        deplacerpieceinfo(i, j, echiquier)
+    elif direction=="droite":
+        j=drci(i)
+        if type(j)!=type(0):
+            return "Erreur"
+        deplacerpieceinfo(i, j, echiquier)
+    return
+
+"""Deplacer la piece à l'emplacement i dans la direction voulue :
+directions possibles :
+    -devant
+    -derriere
+    -gauche
+    -droite
+"""
+
+def ddiri(direction, i, echiquier):
+    if direction=="dev":
+        directionbis="devant"
+    elif direction=="der":
+        directionbis="derriere"
+    elif direction=="d":
+        directionbis="droite"
+    elif direction=="g":
+        directionbis="gauche"
+    else:
+        directionbis=direction
+    return deplacerpiecesdirectioninfo(directionbis, i, echiquier)
 
 
 
