@@ -422,3 +422,7 @@ def deplacementpioninfo(i, echiquier):
         return "Erreur"
     return dep
 
+"""Le pion est la seule pièce dont le déplacement dépend de la couleur"""
+
+
+
