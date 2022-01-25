@@ -26,6 +26,9 @@ def Coordinfotocoordechequiennes(i):
         colonne=alphabet[(i%8)]
         return [colonne, ligne]
 
+def Citoe(i):
+    return Coordinfotocoordechequiennes(i)
+
 def Coordechequiennestocoordinfo(coords):
     """fais la même chose dans le sens inverse"""
     [colonne, ligne]=coords
@@ -38,6 +41,8 @@ def Coordechequiennestocoordinfo(coords):
         return "Erreur"
     return (ligne-1)*8+u
 
+def Cetoi(coords):
+    return Coordechequiennestocoordinfo(coords)
 
 ##description de l'echiquier
 
@@ -149,7 +154,7 @@ def deplacementsendiagonalearrieredroiteinfo(i):
 "Renvoie la case en bas à droite de i"
 
 def dardi(i):
-    return deplacementsendiagonalearreiredroiteinfo(i)
+    return deplacementsendiagonalearrieredroiteinfo(i)
 
 
 def avancerunecaseechiq(coords):
@@ -200,9 +205,52 @@ def gauce(coords):
     return unecaseagaucheechiq(coords)
 
 
+def deplacementsendiagonaleavantgaucheechiq(coords):
+    i=Coordechequiennestocoordinfo(coords)
+    j=deplacementsendiagonaleavantgaucheinfo(i)
+    if j=="Erreur":
+        return j
+    else:
+        return Coordinfotocoordechequiennes(j)
+
+def davge(coords):
+    return deplacementsendiagonaleavantgaucheechiq(coords)
 
 
+def deplacementsendiagonaleavantdroiteechiq(coords):
+    i=Coordechequiennestocoordinfo(coords)
+    j=deplacementsendiagonaleavantdroiteinfo(i)
+    if j=="Erreur":
+        return j
+    else:
+        return Coordinfotocoordechequiennes(j)
 
+def davde(coords):
+    return deplacementsendiagonaleavantdroiteechiq(coords)
+
+
+def deplacementsendiagonalearrieregaucheechiq(coords):
+    i=Coordechequiennestocoordinfo(coords)
+    j=deplacementsendiagonalearrieregaucheinfo(i)
+    if j=="Erreur":
+        return j
+    else:
+        return Coordinfotocoordechequiennes(j)
+
+def darge(coords):
+    return deplacementsendiagonalearrieregaucheechiq(coords)
+
+
+def deplacementsendiagonalearrieredroiteechiq(coords):
+    i=Coordechequiennestocoordinfo(coords)
+    j=deplacementsendiagonalearrieredroiteinfo(i)
+    if j=="Erreur":
+        return j
+    else:
+        return Coordinfotocoordechequiennes(j)
+
+def darde(coords):
+    return deplacementsendiagonalearrieredroiteechiq(coords)
 
 ## deplacement elementaire de pieces sur l'echiquier
 
@@ -219,21 +267,51 @@ def deplacerpiecesdirectioninfo(direction, i, echiquier):
         if type(j)!=type(0):
             return "Erreur"
         deplacerpieceinfo(i, j, echiquier)
+        return
     elif direction=="derriere":
         j=recci(i)
         if type(j)!=type(0):
             return "Erreur"
         deplacerpieceinfo(i, j, echiquier)
+        return
     elif direction=="gauche":
         j=gauci(i)
         if type(j)!=type(0):
             return "Erreur"
         deplacerpieceinfo(i, j, echiquier)
+        return
     elif direction=="droite":
         j=drci(i)
         if type(j)!=type(0):
             return "Erreur"
         deplacerpieceinfo(i, j, echiquier)
+        return
+    elif direction=="avant gauche":
+        j=davgi(i)
+        if type(j)!=type(0):
+            return "Erreur"
+        deplacerpieceinfo(i, j, echiquier)
+        return
+    elif direction=="avant droite":
+        j=davdi(i)
+        if type(j)!=type(0):
+            return "Erreur"
+        deplacerpieceinfo(i, j, echiquier)
+        return
+    elif direction=="arriere droite":
+        j=dardi(i)
+        if type(j)!=type(0):
+            return "Erreur"
+        deplacerpieceinfo(i, j, echiquier)
+        return
+    elif direction=="arriere gauche":
+        j=dargi(i)
+        if type(j)!=type(0):
+            return "Erreur"
+        deplacerpieceinfo(i, j, echiquier)
+        return
+    else:
+        return "Erreur"
     return
 
 """Deplacer la piece à l'emplacement i dans la direction voulue :
@@ -242,6 +320,10 @@ directions possibles :
     -derriere
     -gauche
     -droite
+    -avant gauche
+    -avant droite
+    -arriere droite
+    -arriere gauche
 """
 
 def ddiri(direction, i, echiquier):
@@ -253,9 +335,28 @@ def ddiri(direction, i, echiquier):
         directionbis="droite"
     elif direction=="g":
         directionbis="gauche"
+    elif direction=="avg":
+        directionbis="avant gauche"
+    elif direction=="avd":
+        directionbis="avant droite"
+    elif direction=="arg":
+        directionbis="arriere gauche"
+    elif direction=="ard":
+        directionbis="arriere droite"
     else:
         directionbis=direction
     return deplacerpiecesdirectioninfo(directionbis, i, echiquier)
+
+"""rajoute les raccourcis :
+    -dev = devant
+    -der = derriere
+    -g = gauche
+    -d = droite
+    -avg = avant gauche
+    -avd = avant droite
+    -ard = arriere droite
+    -arg = arriere gauche
+"""
 
 def deplacerpieceechiq(coordsi, coordsj, echiquier):
     i=Coordechequiennestocoordinfo(coordsi)
