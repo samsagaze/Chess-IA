@@ -424,5 +424,7 @@ def deplacementpioninfo(i, echiquier):
 
 """Le pion est la seule pièce dont le déplacement dépend de la couleur"""
 
-
+def deplacementscavalierinfo(i, echiquier):
+    dep=[]
+    if
 
