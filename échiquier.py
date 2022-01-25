@@ -18,8 +18,8 @@ def Creationechiquiervide():
 
 def Coordinfotocoordechequiennes(i):
     """on donne le numéro d'une case de la matrice represenant l'echiquier et on renvoie une coordonnée de type a6"""
-    if i>63 | i<0:
-        return "Pas dans l'echiquier"
+    if i>63 or i<0:
+        return "Erreur"
     else:
         alphabet=["a", "b", "c", "d", "e", "f", "g", "h"]
         ligne=i//8+1
@@ -35,7 +35,7 @@ def Coordechequiennestocoordinfo(coords):
         if alphabet[i]==colonne:
             u=i
     if u==-1:
-        return "Pas dans l'echiquier"
+        return "Erreur"
     return (ligne-1)*8+u
 
 
@@ -62,44 +62,100 @@ Valeur des couleurs :
 ##deplacements elementaires sur l'echiquier
 def avancerunecaseinfo(i):
     if i>55:
-        return "sur la derniere rangee"
+        return "Erreur"
     else:
         return i+8
+
+"""renvoie la case devant i"""
 
 def avci(i):
     return avancerunecaseinfo(i)
 
+
 def reculerunecaseinfo(i):
     if i<8:
-        return "sur la premiere rangee"
+        return "Erreur"
     else:
         return i-8
+
+"""renvoie la case derriere i"""
 
 def recci(i):
     return reculerunecaseinfo(i)
 
+
 def unecasedroiteinfo(i):
     if i%8==7:
-        return "sur la derniere colonne"
+        return "Erreur"
     else:
         return i+1
+
+"""renvoie la case à droite de i"""
 
 def drci(i):
     return unecasedroiteinfo(i)
 
+
 def unecaseagaucheinfo(i):
     if i%8==0:
-        return "sur la premiere colonne"
+        return "Erreur"
     else:
         return i-1
+
+"""renvoie la case à gauche de i"""
 
 def gauci(i):
     return unecaseagaucheinfo(i)
 
+
+def deplacementsendiagonaleavantgaucheinfo(i):
+    if i%8==0 or i>55:
+        return "Erreur"
+    return i+7
+
+"Renvoie la case en haut à gauche de i"
+
+def davgi(i):
+    return deplacementsendiagonaleavantgaucheinfo(i)
+
+
+def deplacementsendiagonaleavantdroiteinfo(i):
+    if i%8==7 or i>55:
+        return "Erreur"
+    return i+9
+
+"Renvoie la case en haut à droite de i"
+
+def davdi(i):
+    return deplacementsendiagonaleavantdroiteinfo(i)
+
+
+def deplacementsendiagonalearrieregaucheinfo(i):
+    if i%8==0 or i<8:
+        return "Erreur"
+    return i-9
+
+"Renvoie la case en bas à gauche de i"
+
+def dargi(i):
+    return deplacementsendiagonalearrieregaucheinfo(i)
+
+
+def deplacementsendiagonalearrieredroiteinfo(i):
+    if i%8==7 or i<8:
+        return "Erreur"
+    return i-7
+
+"Renvoie la case en bas à droite de i"
+
+def dardi(i):
+    return deplacementsendiagonalearreiredroiteinfo(i)
+
+
 def avancerunecaseechiq(coords):
     i=Coordechequiennestocoordinfo(coords)
     j=avancerunecaseinfo(i)
-    if j=="sur la derniere rangee":
+    if j=="Erreur":
         return j
     else:
         return Coordinfotocoordechequiennes(j)
@@ -107,10 +163,11 @@ def avancerunecaseechiq(coords):
 def avce(coords):
     return avancerunecaseechiq(coords)
 
+
 def reculerunecaseechiq(coords):
     i=Coordechequiennestocoordinfo(coords)
     j=reculerunecaseinfo(i)
-    if j=="sur la premiere rangee":
+    if j=="Erreur":
         return j
     else:
         return Coordinfotocoordechequiennes(j)
@@ -118,10 +175,11 @@ def reculerunecaseechiq(coords):
 def recce(coords):
     return reculerunecaseechiq(coords)
 
+
 def unecasedroiteechiq(coords):
     i=Coordechequiennestocoordinfo(coords)
     j=unecasedroiteinfo(i)
-    if j=="sur la derniere colonne":
+    if j=="Erreur":
         return j
     else:
         return Coordinfotocoordechequiennes(j)
@@ -129,16 +187,22 @@ def unecasedroiteechiq(coords):
 def drce(coords):
     return unecasedroiteechiq(coords)
 
+
 def unecaseagaucheechiq(coords):
     i=Coordechequiennestocoordinfo(coords)
     j=unecaseagaucheinfo(i)
-    if j=="sur la premiere colonne":
+    if j=="Erreur":
         return j
     else:
         return Coordinfotocoordechequiennes(j)
 
 def gauce(coords):
     return unecaseagaucheechiq(coords)
+
+
+
+
+
 
 ## deplacement elementaire de pieces sur l'echiquier
 
@@ -208,6 +272,8 @@ def ddire(direction, coords, echiquier):
     i=Coordechequiennestocoordinfo(coords)
     ddiri(direction, i, echiquier)
     return
+
+###deplacements de pièces
 
 
 
