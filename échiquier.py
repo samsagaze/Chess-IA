@@ -44,6 +44,18 @@ def Coordechequiennestocoordinfo(coords):
 def Cetoi(coords):
     return Coordechequiennestocoordinfo(coords)
 
+def casevideinfo(i, echiquier):
+    if echiquier[i]==[]:
+        return True
+    else:
+        return False
+
+"""detecte si une case est vide"""
+
+def casevideechiq(coords, echiquier):
+    i=Cetoi(coords)
+    return casevideinfo(i, echiquier)
+
 ##description de l'echiquier
 
 """L'echiquier est representé sous la forme d'une matrice de tableau, donc les cases sont notées de gauche à droite de bas en haut (voir https://docs.google.com/document/d/1ZkEnX1gmuG94cVONLOJKTuy-SHUzwN2psN2XgxNzptE/edit)
@@ -376,7 +388,23 @@ def ddire(direction, coords, echiquier):
 
 ###deplacements de pièces
 
-
+def deplacementpioninfo(i, echiquier):
+    tab=echiquier[i]
+    dep=[]
+    if tab==[]:
+        return "Erreur"
+    if len(tab)!=2:
+        return "Erreur"
+    [pieces, couleur]=tab
+    if pieces!="P":
+        return "Erreur"
+    if couleur=="B":
+        ja=avci(i)
+        if echiquier[j]==[]:
+            dep+=[j]
+        jg=davgi(i)
+        if len(jg)==2 and jg[1]=="N":
+            dep+=[jg]
 
 
 
