@@ -1,3 +1,14 @@
+###
+
+"""format typique d'une fonction traduite d'info à echiq :
+def fonctionechiq(coords, autresvar):
+    i=Coordechequiennestocoordinfo(coords)
+    [j, autresvar]=fonctioninfo(i, autresvar)
+    coordsbis=Coordinfotocoordechequiennes(j)
+    return [coordsbis, autresvar]
+"""
+
+
 ##Création d'un échiquier vide et coordonnées
 
 def Creationechiquiervide():
@@ -181,6 +192,13 @@ def ddiri(direction, i, echiquier):
     else:
         directionbis=direction
     return deplacerpiecesdirectioninfo(directionbis, i, echiquier)
+
+def deplacerpieceechiq(coordsi, coordsj, echiquier):
+        i=Coordechequiennestocoordinfo(coordsi)
+        j=Coordechequiennestocoordinfo(coordsj)
+        deplacerpieceinfo(i, j, echiquier)
+
+
 
 
 
