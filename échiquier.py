@@ -400,11 +400,25 @@ def deplacementpioninfo(i, echiquier):
         return "Erreur"
     if couleur=="B":
         ja=avci(i)
-        if echiquier[j]==[]:
-            dep+=[j]
+        if echiquier[ja]==[]:
+            dep+=[ja]
         jg=davgi(i)
         if len(jg)==2 and jg[1]=="N":
             dep+=[jg]
-
-
+        jd=davdi(i)
+        if len(jd)==2 and jd[1]=="N":
+            dep+=[jd]
+    elif couleur=="N":
+        ja=recci(i)
+        if echiquier[ja]==[]:
+            dep+=[ja]
+        jg=dargi(i)
+        if len(jg)==2 and jg[1]=="B":
+            dep+=[jg]
+        jd=dardi(i)
+        if len(jd)==2 and jd[1]=="B":
+            dep+=[jd]
+    else:
+        return "Erreur"
+    return dep
 
