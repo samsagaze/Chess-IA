@@ -519,6 +519,10 @@ def deplacementsfouarrieregaucheinfo(i, echiquier):
             else:
                 return dep+[jbg]
 
+def deplacementsfouinfo(i, echiquier):
+    dep=[]
+    dep+=deplacementsfouarrieredroiteinfo(i, echiquier)+deplacementsfoudevantdroiteinfo(i, echiquier)+deplacementsfouarrieregaucheinfo(i, echiquier)+deplacementsfoudevantgaucheinfo(i, echiquier)
+    return dep
 
 
 
