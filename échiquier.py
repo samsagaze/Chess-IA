@@ -591,7 +591,19 @@ def deplacementsfouarrieregaucheinfo(i, echiquier):
 
 def deplacementsfouinfo(i, echiquier):
     dep=[]
-    dep+=deplacementsfouarrieredroiteinfo(i, echiquier)+deplacementsfoudevantdroiteinfo(i, echiquier)+deplacementsfouarrieregaucheinfo(i, echiquier)+deplacementsfoudevantgaucheinfo(i, echiquier)
+    depfad=deplacementsfouarrieredroiteinfo(i, echiquier)
+    depfavd=deplacementsfoudevantdroiteinfo(i, echiquier)
+    depfag=deplacementsfouarrieregaucheinfo(i, echiquier)
+    depfavg=deplacementsfoudevantgaucheinfo(i, echiquier)
+    if depfad=="Erreur":
+        return "Erreur"
+    if depfavd=="Erreur":
+        return "Erreur"
+    if depfag=="Erreur":
+        return "Erreur"
+    if depfavg=="Erreur":
+        return "Erreur"
+    dep+=depfad+depfavd+depfag+depfavg
     return dep
 
 def deplacementstouravantinfo(i, echiquier):
