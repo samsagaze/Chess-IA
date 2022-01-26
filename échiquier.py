@@ -700,6 +700,51 @@ def deplacementsdameinfo(i, echiquier):
     dep+=dept+depf
     return dep
 
+def deplacementsroiinfo(i, echiquier):
+    av=avci(i)
+    dep=[]
+    roi=echiquier[i]
+    if len(roi)!=2:
+        return "Erreur"
+    couleur=roi[1]
+    if av!="Erreur":
+        caseav=echiquier[av]
+        if len(caseav)!=2:
+           return "Erreur"
+        if couleur==caseav[1]:
+            dep+=[av]
+    ar=recci(i)
+    if ar!="Erreur":
+        casear=echiquier[ar]
+        if len(casear)!=2:
+           return "Erreur"
+        if couleur==casear[1]:
+            dep+=[ar]
+    g=gauci(i)
+    if g!="Erreur":
+        caseg=echiquier[g]
+        if len(caseg)!=2:
+           return "Erreur"
+        if couleur==caseg[1]:
+            dep+=[g]
+    d=drci(i)
+    if d!="Erreur":
+        cased=echiquier[d]
+        if len(cased)!=2:
+           return "Erreur"
+        if couleur==cased[1]:
+            dep+=[d]
+    ag=davgi(i)
+    if ag!="Erreur":
+        caseag=echiquier[ag]
+        if len(caseag)!=2:
+           return "Erreur"
+        if couleur==caseag[1]:
+            dep+=[ag]
+    return dep
+
+
+
 
 
 
