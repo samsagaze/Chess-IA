@@ -451,6 +451,13 @@ def deplacementscavalierinfo(i, echiquier):
 """le cavalier se déplacant en L, il faut faire attention aux dépassements des bordures"""
 
 
+def deplacementsfouinfo(i, echiquier):
+    dep=[]
+    j=0
+    bool=True
+    """deplacements en diagonal haut gauche"""
+    while j!="Erreur" and bool:
+
 
 
 
