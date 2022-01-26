@@ -741,6 +741,27 @@ def deplacementsroiinfo(i, echiquier):
            return "Erreur"
         if couleur==caseag[1]:
             dep+=[ag]
+    ad=davdi(i)
+    if ad!="Erreur":
+        casead=echiquier[ad]
+        if len(casead)!=2:
+           return "Erreur"
+        if couleur==casead[1]:
+            dep+=[ad]
+    ard=dardi(i)
+    if ard!="Erreur":
+        caseard=echiquier[ard]
+        if len(caseard)!=2:
+           return "Erreur"
+        if couleur==caseard[1]:
+            dep+=[ard]
+    arg=dargi(i)
+    if arg!="Erreur":
+        casearg=echiquier[arg]
+        if len(casearg)!=2:
+           return "Erreur"
+        if couleur==casearg[1]:
+            dep+=[arg]
     return dep
 
 
