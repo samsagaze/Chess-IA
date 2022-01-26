@@ -675,7 +675,30 @@ def deplacementstourgaucheinfo(i, echiquier):
                 return dep+[jg]
 
 def deplacementstourinfo(i, echiquier):
-    return
+    dep=[]
+    deptav=deplacementstouravantinfo(i, echiquier)
+    deptar=deplacementstourarriereinfo(i, echiquier)
+    deptg=deplacementstourgaucheinfo(i, echiquier)
+    depfd=deplacementstourdroiteinfo(i, echiquier)
+    if deptav=="Erreur":
+        return "Erreur"
+    if deptar=="Erreur":
+        return "Erreur"
+    if deptg=="Erreur":
+        return "Erreur"
+    if deptd=="Erreur":
+        return "Erreur"
+    dep+=deptav+deptar+deptg+deptd
+    return dep
+
+def deplacementsdameinfo(i, echiquier):
+    dep=[]
+    dept=deplacementstourinfo(i, echiquier)
+    depf=deplacementsfouinfo(i, echiquier)
+    if dept=="Erreur" or depf=="Erreur":
+        return "Erreur"
+    dep+=dept+depf
+    return dep
 
 
 
