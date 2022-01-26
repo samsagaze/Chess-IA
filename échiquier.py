@@ -388,6 +388,9 @@ def ddire(direction, coords, echiquier):
 
 ###deplacements de pièces
 
+"""Les fonctions suivantes donnent les deplacements possibles d'une pièce à l'emplacement i en fonction de l'echiquier
+Cependant rien ne dit qu'à la case i il se trouve bien ce type de pièce; si ce n'est pas le cas les fonctions vont souvent retourner erreur"""
+
 def deplacementpioninfo(i, echiquier):
     tab=echiquier[i]
     dep=[]
@@ -426,26 +429,93 @@ def deplacementpioninfo(i, echiquier):
 
 def deplacementscavalierinfo(i, echiquier):
     dep=[]
+    if len(echiquier[i])!=2:
+        return erreur
+    couleur=echiquier[i][1]
     if i<48:
         if i%8!=7:
-            dep+=[i+17]
+            c=echiquier[i+17]
+            if c!=[]:
+                if len(c)!=2:
+                    return "Erreur"
+                else:
+                    if c[1]!=couleur:
+                        dep+=[i+17]
+            else:
+                dep+=[i+17]
         if i%8!=0:
-            dep+=[i+15]
+            c=echiquier[i+15]
+            if c!=[]:
+                if len(c)!=2:
+                    return "Erreur"
+                else:
+                    if c[1]!=couleur:
+                        dep+=[i+15]
+            else:
+                dep+=[i+15]
     if i>15:
         if i%8!=7:
-            dep+=[i-15]
+            c=echiquier[i-15]
+            if c!=[]:
+                if len(c)!=2:
+                    return "Erreur"
+                else:
+                    if c[1]!=couleur:
+                        dep+=[i-15]
+            else:
+                dep+=[i-15]
         if i%8!=0:
-            dep+=[i-17]
+            c=echiquier[i-17]
+            if c!=[]:
+                if len(c)!=2:
+                    return "Erreur"
+                else:
+                    if c[1]!=couleur:
+                        dep+=[i-17]
+            else:
+                dep+=[i-17]
     if i%8>1:
         if i<56:
-            dep+=[i+6]
+            c=echiquier[i+6]
+            if c!=[]:
+                if len(c)!=2:
+                    return "Erreur"
+                else:
+                    if c[1]!=couleur:
+                        dep+=[i+6]
+            else:
+                dep+=[i+6]
         if i>7:
-            dep+=[i-10]
+            c=echiquier[i-10]
+            if c!=[]:
+                if len(c)!=2:
+                    return "Erreur"
+                else:
+                    if c[1]!=couleur:
+                        dep+=[i-10]
+            else:
+                dep+=[i-10]
     if i%8<6:
         if i<56:
-            dep+=[i+10]
+            c=echiquier[i+10]
+            if c!=[]:
+                if len(c)!=2:
+                    return "Erreur"
+                else:
+                    if c[1]!=couleur:
+                        dep+=[i+10]
+            else:
+                dep+=[i+10]
         if i>7:
-            dep+=[i-6]
+            c=echiquier[i-6]
+            if c!=[]:
+                if len(c)!=2:
+                    return "Erreur"
+                else:
+                    if c[1]!=couleur:
+                        dep+=[i-6]
+            else:
+                dep+=[i-6]
     return dep
 
 """le cavalier se déplacant en L, il faut faire attention aux dépassements des bordures"""
@@ -509,7 +579,7 @@ def deplacementsfouarrieregaucheinfo(i, echiquier):
     boolbg=True
     """deplacements en diagonal bas gauche"""
     while boolbg:
-        jhd=dargi(i)
+        jav=dargi(i)
         if jbg=="Erreur":
             return dep
         casejbg=echiquier[jbg]
@@ -524,6 +594,76 @@ def deplacementsfouinfo(i, echiquier):
     dep+=deplacementsfouarrieredroiteinfo(i, echiquier)+deplacementsfoudevantdroiteinfo(i, echiquier)+deplacementsfouarrieregaucheinfo(i, echiquier)+deplacementsfoudevantgaucheinfo(i, echiquier)
     return dep
 
+def deplacementstouravantinfo(i, echiquier):
+    dep=[]
+    jav=0
+    couleur=echiquier[i][1]
+    boolav=True
+    """deplacements en avant"""
+    while boolav:
+        jav=avci(i)
+        if jav=="Erreur":
+            return dep
+        casejav=echiquier[jav]
+        if casejav!=[]:
+            if couleur==casejav[1]:
+                return dep
+            else:
+                return dep+[jav]
+
+def deplacementstourarriereinfo(i, echiquier):
+    dep=[]
+    jar=0
+    couleur=echiquier[i][1]
+    boolar=True
+    """deplacements en arriere"""
+    while boolar:
+        jar=r=recci(i)
+        if jar=="Erreur":
+            return dep
+        casejar=echiquier[jar]
+        if casejar!=[]:
+            if couleur==casejar[1]:
+                return dep
+            else:
+                return dep+[jar]
+
+def deplacementstourdroiteinfo(i, echiquier):
+    dep=[]
+    jd=0
+    couleur=echiquier[i][1]
+    boold=True
+    """deplacements à droite"""
+    while boold:
+        jd=drci(i)
+        if jd=="Erreur":
+            return dep
+        casejd=echiquier[jd]
+        if casejd!=[]:
+            if couleur==casejd[1]:
+                return dep
+            else:
+                return dep+[jd]
+
+def deplacementstourgaucheinfo(i, echiquier):
+    dep=[]
+    jg=0
+    couleur=echiquier[i][1]
+    boolg=True
+    """deplacements à gauche"""
+    while boolg:
+        jg=gauci(i)
+        if jg=="Erreur":
+            return dep
+        casejg=echiquier[jg]
+        if casejg!=[]:
+            if couleur==casejg[1]:
+                return dep
+            else:
+                return dep+[jg]
+
+def deplacementstourinfo(i, echiquier):
+    return
 
 
 
