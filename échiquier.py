@@ -451,12 +451,42 @@ def deplacementscavalierinfo(i, echiquier):
 """le cavalier se déplacant en L, il faut faire attention aux dépassements des bordures"""
 
 
-def deplacementsfouinfo(i, echiquier):
+def deplacementsfoudevantgaucheinfo(i, echiquier):
     dep=[]
-    j=0
-    bool=True
+    jhg=0
+    couleur=echiquier[i][1]
+    boolhg=True
     """deplacements en diagonal haut gauche"""
-    while j!="Erreur" and bool:
+    while boolhg:
+        jhg=davgi(i)
+        if jhg=="Erreur":
+            return dep
+        casejhg=echiquier[jhg]
+        if casejhg!=[]:
+            if couleur==casejhg[1]:
+                return dep
+            else:
+                return dep+[jhg]
+
+def deplacementsfoudevantdroiteinfo(i, echiquier):
+    dep=[]
+    jhd=0
+    couleur=echiquier[i][1]
+    boolhd=True
+    """deplacements en diagonal haut droite"""
+    while boolhd:
+        jhd=davdi(i)
+        if jhd=="Erreur":
+            return dep
+        casejhd=echiquier[jhd]
+        if casejhd!=[]:
+            if couleur==casejhd[1]:
+                return dep
+            else:
+                return dep+[jhd]
+
+
+
 
 
 
