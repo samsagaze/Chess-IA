@@ -485,6 +485,39 @@ def deplacementsfoudevantdroiteinfo(i, echiquier):
             else:
                 return dep+[jhd]
 
+def deplacementsfouarrieredroiteinfo(i, echiquier):
+    dep=[]
+    jbd=0
+    couleur=echiquier[i][1]
+    boolbd=True
+    """deplacements en diagonal bas droite"""
+    while boolbd:
+        jhd=dardi(i)
+        if jhd=="Erreur":
+            return dep
+        casejhd=echiquier[jbd]
+        if casejbd!=[]:
+            if couleur==casejbd[1]:
+                return dep
+            else:
+                return dep+[jbd]
+
+def deplacementsfouarrieregaucheinfo(i, echiquier):
+    dep=[]
+    jbg=0
+    couleur=echiquier[i][1]
+    boolbg=True
+    """deplacements en diagonal bas gauche"""
+    while boolbg:
+        jhd=dargi(i)
+        if jbg=="Erreur":
+            return dep
+        casejbg=echiquier[jbg]
+        if casejbg!=[]:
+            if couleur==casejbg[1]:
+                return dep
+            else:
+                return dep+[jbg]
 
 
 
