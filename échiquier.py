@@ -403,7 +403,7 @@ def deplacementpioninfo(i, echiquier):
         return "Erreur"
     if couleur=="B":
         ja=avci(i)
-        if echiquier[ja]==[]:
+        if echiquier[ja]==[]:   #mais louis est un amour
             dep+=[ja]
         jg=davgi(i)
         if len(jg)==2 and jg[1]=="N":
