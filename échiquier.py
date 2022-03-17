@@ -7,8 +7,9 @@ def fonctionechiq(coords, autresvar):
     coordsbis=Coordinfotocoordechequiennes(j)
     return [coordsbis, autresvar]
 """
+"""Variables utiles : """
 
-
+pieces = ["P", "C", "F", "T", "R", "D"]
 ##Création d'un échiquier vide et coordonnées
 
 def Creationechiquiervide():
@@ -764,6 +765,29 @@ def deplacementsroiinfo(i, echiquier):
             dep+=[arg]
     return dep
 
+### Deplacements possibles
+
+
+
+def deppossibles(echiquier, couleur):
+    res=[]
+    for i in range(64):
+        case=echiquier[i]
+        if len(case)==2 and case[1]==couleur:
+            x=case[0]
+            if x=="P":
+                res+=[["P", i, deplacementpioninfo(i, echiquier)]]
+            elif x=="C":
+                res+=[["C", i, deplacementscavalierinfo(i, echiquier)]]
+            elif x=="F":
+                res+=[["F", i, deplacementsfouinfo(i, echiquier)]]
+            elif x=="T":
+                res+=[["T", i, deplacementstourinfo(i, echiquier)]]
+            elif x=="R":
+                res+=[["R", i, deplacementsroiinfo(i, echiquier)]]
+            elif x=="D":
+                res+=[["D", i, deplacementsdameinfo(i, echiquier)]]
+    return res
 
 
 
