@@ -6,16 +6,25 @@ def fonctionechiq(coords, autresvar):
     [j, autresvar]=fonctioninfo(i, autresvar)
     coordsbis=Coordinfotocoordechequiennes(j)
     return [coordsbis, autresvar]
+
+coords=[colonne, ligne], avec colonne type string et ligne type int
 """
 """Variables utiles : """
 
 pieces = ["P", "C", "F", "T", "R", "D"]
+
 ##Création d'un échiquier vide et coordonnées
 
 def Creationechiquiervide():
     """ crée un echiquier vide"""
     echiquier=[[] for i in range(64)]
     return echiquier
+
+"""signature : null -> tableau"""
+
+def Cev():
+    return Creationechiquiervide()
+"""alias de creationechiquiervide, même signature"""
 
 def Coordinfotocoordechequiennes(i):
     """on donne le numéro d'une case de la matrice represenant l'echiquier et on renvoie une coordonnée de type a6"""
@@ -26,9 +35,11 @@ def Coordinfotocoordechequiennes(i):
         ligne=i//8+1
         colonne=alphabet[(i%8)]
         return [colonne, ligne]
+"""signature : int -> [string, int]"""
 
 def Citoe(i):
     return Coordinfotocoordechequiennes(i)
+"""alias de coordinfotocoordechequiennes, même signature"""
 
 def Coordechequiennestocoordinfo(coords):
     """fais la même chose dans le sens inverse"""
@@ -41,9 +52,12 @@ def Coordechequiennestocoordinfo(coords):
     if u==-1:
         return "Erreur"
     return (ligne-1)*8+u
+"""signature : [string, int]-> int"""
+
 
 def Cetoi(coords):
     return Coordechequiennestocoordinfo(coords)
+"""alias de coordechequiennestocoordinfo, même signature"""
 
 def casevideinfo(i, echiquier):
     if echiquier[i]==[]:
@@ -51,11 +65,52 @@ def casevideinfo(i, echiquier):
     else:
         return False
 
-"""detecte si une case est vide"""
+"""detecte si une case est vide
+signature : [int, tableau]-> booleen"""
 
 def casevideechiq(coords, echiquier):
     i=Cetoi(coords)
     return casevideinfo(i, echiquier)
+
+def ajoutpiecei(x, c, i, echiquier):
+    echiquier[i]=[x, c]
+    return
+
+"""ajoute la pièce x (type string) de la couleur c (type String) à l'emplacement i (type int) à l'échiquier"""
+
+def ajoutpiecece(x, c, coords, echiquier):
+    i=Cetoi(coords)
+    ajoutpiecei(x, c, i ,echiquier)
+
+def Creationechequierplein():
+    echiquier=Creationechiquiervide()
+    couleur="B"
+    for i in range(8):
+        echiquier[i]=["P", couleur]
+    echiquier[0]=["T", couleur]
+    echiquier[7]=["T", couleur]
+    echiquier[1]=["C", couleur]
+    echiquier[6]=["C", couleur]
+    echiquier[2]=["F", couleur]
+    echiquier[5]=["F", couleur]
+    echiquier[3]=["D", couleur]
+    echiquier[4]=["R", couleur]
+    couleur="N"
+    for i in range(8):
+        echiquier[i+48]=["P", couleur]
+    echiquier[56]=["T", couleur]
+    echiquier[63]=["T", couleur]
+    echiquier[57]=["C", couleur]
+    echiquier[62]=["C", couleur]
+    echiquier[58]=["F", couleur]
+    echiquier[61]=["F", couleur]
+    echiquier[59]=["D", couleur]
+    echiquier[60]=["R", couleur]
+    return echiquier
+
+"""crée un echiquier avec les pièces de départ dessus
+signature : null-> tableau"""unidd
+
 
 ##description de l'echiquier
 
@@ -78,6 +133,12 @@ Valeur des couleurs :
 
 
 ##deplacements elementaires sur l'echiquier
+"""toute les fonctions info auront pour signature :
+int -> int
+toutes les fonctions coordonnées echquiennes auront pour signature
+coords -> coords"""
+
+
 def avancerunecaseinfo(i):
     if i>55:
         return "Erreur"
@@ -271,6 +332,7 @@ def deplacerpieceinfo(i, j, echiquier):
     echiquier[j]=echiquier[i]
     echiquier[i]=[]
     return
+"""signature : int, int, tableau -> null"""
 
 """met la pièce de la case i sur la case j"""
 
@@ -337,6 +399,7 @@ directions possibles :
     -avant droite
     -arriere droite
     -arriere gauche
+signature : string, int, tableau -> null
 """
 
 def ddiri(direction, i, echiquier):
@@ -369,6 +432,7 @@ def ddiri(direction, i, echiquier):
     -avd = avant droite
     -ard = arriere droite
     -arg = arriere gauche
+signature : string, int, tableau -> null
 """
 
 def deplacerpieceechiq(coordsi, coordsj, echiquier):
@@ -390,7 +454,8 @@ def ddire(direction, coords, echiquier):
 ###deplacements de pièces
 
 """Les fonctions suivantes donnent les deplacements possibles d'une pièce à l'emplacement i en fonction de l'echiquier
-Cependant rien ne dit qu'à la case i il se trouve bien ce type de pièce; si ce n'est pas le cas les fonctions vont souvent retourner erreur"""
+Cependant rien ne dit qu'à la case i il se trouve bien ce type de pièce; si ce n'est pas le cas les fonctions vont souvent retourner erreur
+signature des fonctions : int, tableau -> tableau"""
 
 def deplacementpioninfo(i, echiquier):
     tab=echiquier[i]
@@ -404,23 +469,23 @@ def deplacementpioninfo(i, echiquier):
         return "Erreur"
     if couleur=="B":
         ja=avci(i)
-        if echiquier[ja]==[]:   #mais louis est un amour
+        if echiquier[ja]==[]:
             dep+=[ja]
         jg=davgi(i)
-        if len(jg)==2 and jg[1]=="N":
+        if jg!="Erreur" and len(echiquier[jg])==2 and echiquier[jg][1]=="N":
             dep+=[jg]
         jd=davdi(i)
-        if len(jd)==2 and jd[1]=="N":
+        if jd!="Erreur" and len(echiquier[jd])==2 and echiquier[jd][1]=="N":
             dep+=[jd]
     elif couleur=="N":
         ja=recci(i)
         if echiquier[ja]==[]:
             dep+=[ja]
         jg=dargi(i)
-        if len(jg)==2 and jg[1]=="B":
+        if jg!="Erreur" and len(echiquier[jg])==2 and echiquier[jd][1]=="B":
             dep+=[jg]
         jd=dardi(i)
-        if len(jd)==2 and jd[1]=="B":
+        if jd!="Erreur" and len(echiquier[jd])==2 and echiquier[jd][1]=="B":
             dep+=[jd]
     else:
         return "Erreur"
@@ -524,12 +589,12 @@ def deplacementscavalierinfo(i, echiquier):
 
 def deplacementsfoudevantgaucheinfo(i, echiquier):
     dep=[]
-    jhg=0
+    jhg=i
     couleur=echiquier[i][1]
     boolhg=True
     """deplacements en diagonal haut gauche"""
     while boolhg:
-        jhg=davgi(i)
+        jhg=davgi(jhg)
         if jhg=="Erreur":
             return dep
         casejhg=echiquier[jhg]
@@ -541,12 +606,12 @@ def deplacementsfoudevantgaucheinfo(i, echiquier):
 
 def deplacementsfoudevantdroiteinfo(i, echiquier):
     dep=[]
-    jhd=0
+    jhd=i
     couleur=echiquier[i][1]
     boolhd=True
     """deplacements en diagonal haut droite"""
     while boolhd:
-        jhd=davdi(i)
+        jhd=davdi(jhd)
         if jhd=="Erreur":
             return dep
         casejhd=echiquier[jhd]
@@ -556,17 +621,18 @@ def deplacementsfoudevantdroiteinfo(i, echiquier):
             else:
                 return dep+[jhd]
 
+
 def deplacementsfouarrieredroiteinfo(i, echiquier):
     dep=[]
-    jbd=0
+    jbd=i
     couleur=echiquier[i][1]
     boolbd=True
     """deplacements en diagonal bas droite"""
     while boolbd:
-        jhd=dardi(i)
-        if jhd=="Erreur":
+        jbd=dardi(jbd)
+        if jbd=="Erreur":
             return dep
-        casejhd=echiquier[jbd]
+        casejbd=echiquier[jbd]
         if casejbd!=[]:
             if couleur==casejbd[1]:
                 return dep
@@ -575,12 +641,12 @@ def deplacementsfouarrieredroiteinfo(i, echiquier):
 
 def deplacementsfouarrieregaucheinfo(i, echiquier):
     dep=[]
-    jbg=0
+    jbg=i
     couleur=echiquier[i][1]
     boolbg=True
     """deplacements en diagonal bas gauche"""
     while boolbg:
-        jav=dargi(i)
+        jbg=dargi(jbg)
         if jbg=="Erreur":
             return dep
         casejbg=echiquier[jbg]
@@ -609,12 +675,12 @@ def deplacementsfouinfo(i, echiquier):
 
 def deplacementstouravantinfo(i, echiquier):
     dep=[]
-    jav=0
+    jav=i
     couleur=echiquier[i][1]
     boolav=True
     """deplacements en avant"""
     while boolav:
-        jav=avci(i)
+        jav=avci(jav)
         if jav=="Erreur":
             return dep
         casejav=echiquier[jav]
@@ -626,12 +692,12 @@ def deplacementstouravantinfo(i, echiquier):
 
 def deplacementstourarriereinfo(i, echiquier):
     dep=[]
-    jar=0
+    jar=i
     couleur=echiquier[i][1]
     boolar=True
     """deplacements en arriere"""
     while boolar:
-        jar=r=recci(i)
+        jar=r=recci(jar)
         if jar=="Erreur":
             return dep
         casejar=echiquier[jar]
@@ -643,12 +709,12 @@ def deplacementstourarriereinfo(i, echiquier):
 
 def deplacementstourdroiteinfo(i, echiquier):
     dep=[]
-    jd=0
+    jd=i
     couleur=echiquier[i][1]
     boold=True
     """deplacements à droite"""
     while boold:
-        jd=drci(i)
+        jd=drci(jd)
         if jd=="Erreur":
             return dep
         casejd=echiquier[jd]
@@ -660,12 +726,12 @@ def deplacementstourdroiteinfo(i, echiquier):
 
 def deplacementstourgaucheinfo(i, echiquier):
     dep=[]
-    jg=0
+    jg=i
     couleur=echiquier[i][1]
     boolg=True
     """deplacements à gauche"""
     while boolg:
-        jg=gauci(i)
+        jg=gauci(jg)
         if jg=="Erreur":
             return dep
         casejg=echiquier[jg]
@@ -680,7 +746,7 @@ def deplacementstourinfo(i, echiquier):
     deptav=deplacementstouravantinfo(i, echiquier)
     deptar=deplacementstourarriereinfo(i, echiquier)
     deptg=deplacementstourgaucheinfo(i, echiquier)
-    depfd=deplacementstourdroiteinfo(i, echiquier)
+    deptd=deplacementstourdroiteinfo(i, echiquier)
     if deptav=="Erreur":
         return "Erreur"
     if deptar=="Erreur":
@@ -789,7 +855,43 @@ def deppossibles(echiquier, couleur):
                 res+=[["D", i, deplacementsdameinfo(i, echiquier)]]
     return res
 
+"""à une position donnée, pour un joueur (défini par la couleur), donne tout les coups que ce joueur peut jouer
+signature : tableau, string -> tableau"""
 
 
+
+### évaluations de positions echecs gloutons
+"""les fonctions suivantes servent à évaluer une position : un score positif (rec négatif) signifie un avantage pour blanc (rec noir). Plus le score est élevé en valeur absolue, plus l'avantage est conséquent
+signature : tableau -> int"""
+valpieces = [10, 29, 31, 50, 25,  120]
+
+def evalpos1(echiquier):
+    evaluation=0
+    for case in echiquier:
+        if case!=[]:
+            case=[piece, couleur]
+            valpiece=0
+            for i in range(6):
+                if piece==pieces[i]:
+                    valpiece=valpieces[i]
+            if couleur=="B":
+                evaluation+=valpiece
+            elif couleur=="N":
+                evaluation-=valpiece
+            else:
+                return "Erreur"
+        return evaluation
+
+"""methode d'évaluation la plus basique, on somme la valeur des pièces"""
+
+
+### arbre de jeu
+
+"""création de l'arbre de jeu"""
+
+def arbredejeu(profondeur, e, couleur):
+
+
+### algorithme min max
 
 
