@@ -697,7 +697,7 @@ def deplacementstourarriereinfo(i, echiquier):
     boolar=True
     """deplacements en arriere"""
     while boolar:
-        jar=r=recci(jar)
+        jar=recci(jar)
         if jar=="Erreur":
             return dep
         casejar=echiquier[jar]
