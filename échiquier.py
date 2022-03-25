@@ -86,7 +86,7 @@ def Creationechequierplein():
     echiquier=Creationechiquiervide()
     couleur="B"
     for i in range(8):
-        echiquier[i]=["P", couleur]
+        echiquier[i+8]=["P", couleur]
     echiquier[0]=["T", couleur]
     echiquier[7]=["T", couleur]
     echiquier[1]=["C", couleur]
@@ -140,6 +140,9 @@ def identifiant(echiquier):
                         id+=j*(6**(2*i+1))
     return id
 
+"""signature : tableau ->int
+attribue un identifiant unique (demontrable facilement) à chaque position possible
+essentielle pour le hash"""
 
 ##description de l'echiquier
 
@@ -896,9 +899,9 @@ valpieces = [10, 29, 31, 50, 25,  120]
 
 def evalpos1(echiquier):
     evaluation=0
-    victoire=victoire(echiquier)
-    if victoire[0]:
-        if victoire[1]=="B":
+    vic=victoire(echiquier)
+    if vic[0]:
+        if vic[1]=="B":
             return 10000
         else:
             return -10000
@@ -938,15 +941,15 @@ def arbredejeu(profondeur, e, couleur):
 from copy import deepcopy
 
 def minimax(profondeur, echiquier, couleur, dico):
-    identifiant=identifiant(echiquier)
-    str=str(identifiant)
-    if str in dico:
-        [valeur, coup]=dico[str]
+    identite=identifiant(echiquier)
+    string=str(identite)
+    if string in dico:
+        [valeur, coup]=dico[string]
         if coup!=[-1, -1] or profondeur==0:
-            return dico[str]
+            return dico[string]
     if profondeur==0 or victoire(echiquier)[0]:
         evalpos=evalpos1(echiquier)
-        dico[str]=[evalpos, [-1, -1]]
+        dico[string]=[evalpos, [-1, -1]]
         return [evalpos, [-1, -1]]
     else:
         if couleur=="B":
@@ -964,7 +967,7 @@ def minimax(profondeur, echiquier, couleur, dico):
                     if valeurbis>valeur:
                         valeur=valeurbis
                         coup=[caseoriginelle, j]
-                dico[str]=[valeur, coup]
+                dico[string]=[valeur, coup]
                 return [valeur, coup]
         else:
             valeur=10000
@@ -981,9 +984,25 @@ def minimax(profondeur, echiquier, couleur, dico):
                     if valeurbis<valeur:
                         valeur=valeurbis
                         coup=[caseoriginelle, j]
-                dico[str]=[valeur, coup]
+                dico[string]=[valeur, coup]
                 return [valeur, coup]
-
+        return
 """signature : int, tableau, string, dictionnaire -> [int, *[int, int]]
-remarque : dans le cas où coup=[-1, -1], alors aucun coup n'est joué"""
+remarque : dans le cas où coup=[-1, -1], alors aucun coup n'est joué
+problème à corriger dans le code"""
 
+
+### Suite du projet
+
+"""On attaque maintenat la partie du problème où on regarde le jeu d'échecs classique"""
+
+def echecs(echiquier, couleur):
+    return bool
+
+"""vérifie si le roi est en échec dans la position atteinte"""
+
+
+def coupspossbis(echiquier):
+    return res
+
+"""même fonction que celle déjà vue, mais en prenant en compte les échecs (le roi ne peut pas être en e
