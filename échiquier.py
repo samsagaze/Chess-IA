@@ -933,13 +933,57 @@ def arbredejeu(profondeur, e, couleur):
 
 ### algorithme min max
 
+"""afin de jouer les coups, on copie l'echiquier, neamoins ce dernier etant un tableau de tableau nous avons besoin de la fonction deepcopy du module copy"""
+
+from copy import deepcopy
+
 def minimax(profondeur, echiquier, couleur, dico):
     identifiant=identifiant(echiquier)
     str=str(identifiant)
     if str in dico:
-        return dico[str]
+        [valeur, coup]=dico[str]
+        if coup!=[-1, -1] or profondeur==0:
+            return dico[str]
     if profondeur==0 or victoire(echiquier)[0]:
-        dico[str]=evalpos1(echiquier)
+        evalpos=evalpos1(echiquier)
+        dico[str]=[evalpos, [-1, -1]]
+        return [evalpos, [-1, -1]]
     else:
         if couleur=="B":
             valeur=-10000
+            coup=[-1, -1]
+            couppos=deppossibles(echiquier, couleur)
+            for coups in couppos:
+                caseoriginelle=coups[1]
+                couppospiece=coups[2]
+                for j in couppospiece:
+                    echiquierbis=deepcopy(echiquier)
+                    deplacerpieceinfo(caseoriginelle, j, echiquierbis)
+                    minmaxj=minimax(profondeur-1, echiquierbis, "N", dico)
+                    valeurbis=minmaxj[0]
+                    if valeurbis>valeur:
+                        valeur=valeurbis
+                        coup=[caseoriginelle, j]
+                dico[str]=[valeur, coup]
+                return [valeur, coup]
+        else:
+            valeur=10000
+            coup=[-1, -1]
+            couppos=deppossibles(echiquier, couleur)
+            for coups in couppos:
+                caseoriginelle=coups[1]
+                couppospiece=coups[2]
+                for j in couppospiece:
+                    echiquierbis=deepcopy(echiquier)
+                    deplacerpieceinfo(caseoriginelle, j, echiquierbis)
+                    minmaxj=minimax(profondeur-1, echiquierbis, "B", dico)
+                    valeurbis=minmaxj[0]
+                    if valeurbis<valeur:
+                        valeur=valeurbis
+                        coup=[caseoriginelle, j]
+                dico[str]=[valeur, coup]
+                return [valeur, coup]
+
+"""signature : int, tableau, string, dictionnaire -> [int, *[int, int]]
+remarque : dans le cas où coup=[-1, -1], alors aucun coup n'est joué"""
+
