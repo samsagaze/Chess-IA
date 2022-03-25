@@ -109,7 +109,36 @@ def Creationechequierplein():
     return echiquier
 
 """crée un echiquier avec les pièces de départ dessus
-signature : null-> tableau"""unidd
+signature : null-> tableau"""
+
+def victoire(echiquier):
+    couleur=""
+    for case in echiquier:
+        if case!=[]:
+            if couleur=="":
+                couleur=case[1]
+            else:
+                if couleur!=case[1]:
+                    return [False, ""]
+    if couleur=="":
+        return [False, ""]
+    return [True, couleur]
+
+"""si il y a un vainqueur dans la position donnée, alors victoire renvoie le doublet [True, couleur du vainqueur], sinon la fonction renvoie [False, ""]
+signature : tableau -> [bool, String]"""
+
+def identifiant(echiquier):
+    id=0
+    for i in range(64):
+        case=echiquier[i]
+        if case!=[]:
+            for j in range(6):
+                if case[0]==pieces[j]:
+                    if case[1]=="B":
+                        id+=j*(6**(2*i))
+                    else:
+                        id+=j*(6**(2*i+1))
+    return id
 
 
 ##description de l'echiquier
@@ -867,6 +896,12 @@ valpieces = [10, 29, 31, 50, 25,  120]
 
 def evalpos1(echiquier):
     evaluation=0
+    victoire=victoire(echiquier)
+    if victoire[0]:
+        if victoire[1]=="B":
+            return 10000
+        else:
+            return -10000
     for case in echiquier:
         if case!=[]:
             case=[piece, couleur]
@@ -882,16 +917,29 @@ def evalpos1(echiquier):
                 return "Erreur"
         return evaluation
 
-"""methode d'évaluation la plus basique, on somme la valeur des pièces"""
+"""methode d'évaluation la plus basique, on somme la valeur des pièces
+puisque la valeur maximale rendue par la fonction en valeur absolue est 120+8*10+25+2*29+2*31+2*50=445, on peut considerer que 10000 correspond à une valeur inifinie"""
 
 
+"""
 ### arbre de jeu
 
-"""création de l'arbre de jeu"""
+création de l'arbre de jeu
 
 def arbredejeu(profondeur, e, couleur):
+    return
+"""
 
 
 ### algorithme min max
 
-
+def minimax(profondeur, echiquier, couleur, dico):
+    identifiant=identifiant(echiquier)
+    str=str(identifiant)
+    if str in dico:
+        return dico[str]
+    if profondeur==0 or victoire(echiquier)[0]:
+        dico[str]=evalpos1(echiquier)
+    else:
+        if couleur=="B":
+            valeur=-10000
