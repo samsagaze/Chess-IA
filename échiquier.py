@@ -918,7 +918,7 @@ def evalpos1(echiquier):
                 evaluation-=valpiece
             else:
                 return "Erreur"
-        return evaluation
+        return -evaluation
 
 """methode d'évaluation la plus basique, on somme la valeur des pièces
 puisque la valeur maximale rendue par la fonction en valeur absolue est 120+8*10+25+2*29+2*31+2*50=445, on peut considerer que 10000 correspond à une valeur inifinie"""
@@ -999,10 +999,40 @@ problème à corriger dans le code"""
 def echecs(echiquier, couleur):
     return bool
 
-"""vérifie si le roi est en échec dans la position atteinte"""
+"""vérifie si le roi de la couleur mentionnee est en échec dans la position atteinte"""
+
+def mat(couleur):
+    return bool
+
+"""vérifie si un joueur à gagner"""
 
 
 def coupspossbis(echiquier):
     return res
 
-"""même fonction que celle déjà vue, mais en prenant en compte les échecs (le roi ne peut pas être en e
+"""même fonction que celle déjà vue, mais en prenant en compte les regles particulieres (le roi ne peut pas être en echec par exemple, mais aussi double deplacement du pion, roque - on rajoutera des booleens en fin d'echiquier si le roque est possible, prise en passant et promotion)"""
+
+def elaguagealphabeta(profondeur, echiquier, couleur, dico):
+    return value
+
+"""même principe que la fonction minimax mais amelioré"""
+
+def evalpos2(echiquier):
+    return value
+
+"""fonction permettant d'évaluer une position
+fonction la plus importante dans cette partie, plusieurs versions seront regardées
+première version très similaire à evalpos2 (la valeur renvoyée ne sera pas inversée, et le roi n'aura pas de valeur - ne pas en avoir signifie avoir perdue
+version plus avancée ou chaque pièce aura une valeure différente en fonction de la case sur laquelle elle est"""
+
+def jouer(couleur):
+    while True:
+        input(coup)
+        """...
+        """
+    return
+
+"""fonction permettant au joueur de jouer contre l'IA
+prise en compte de la règle des 50 coups (si 50 coups joué sans deplacements de pion ou piece prise alors partie nulle"""
+
+
