@@ -907,18 +907,18 @@ def evalpos1(echiquier):
             return -10000
     for case in echiquier:
         if case!=[]:
-            case=[piece, couleur]
+            [piece, couleur]=case
             valpiece=0
             for i in range(6):
                 if piece==pieces[i]:
                     valpiece=valpieces[i]
-            if couleur=="B":
-                evaluation+=valpiece
-            elif couleur=="N":
-                evaluation-=valpiece
-            else:
-                return "Erreur"
-        return -evaluation
+                    if couleur=="B":
+                        evaluation+=valpiece
+                    elif couleur=="N":
+                        evaluation-=valpiece
+                    else:
+                        return "Erreur"
+    return -evaluation
 
 """methode d'évaluation la plus basique, on somme la valeur des pièces
 puisque la valeur maximale rendue par la fonction en valeur absolue est 120+8*10+25+2*29+2*31+2*50=445, on peut considerer que 10000 correspond à une valeur inifinie"""
@@ -940,37 +940,25 @@ def arbredejeu(profondeur, e, couleur):
 
 from copy import deepcopy
 
+
+
+
 def minimax(profondeur, echiquier, couleur, dico):
     identite=identifiant(echiquier)
     string=str(identite)
     if string in dico:
-        [valeur, coup]=dico[string]
-        if coup!=[-1, -1] or profondeur==0:
-            return dico[string]
-    if profondeur==0 or victoire(echiquier)[0]:
+        [valeur, profondeurb]=dico[string]
+        if profondeur==0:
+            return [valeur, profondeurb]
+        if abs(valeur)==10000:
+            return [valeur, profondeurb]
+    if profondeur==0 or victoire(echiquier)[0]:             #remarque : ce cas sera très rare, puisqu'a priori on a déjà evalué la position dans dico au coup précedent
         evalpos=evalpos1(echiquier)
-        dico[string]=[evalpos, [-1, -1]]
-        return [evalpos, [-1, -1]]
+        dico[string]=[evalpos1, 0]
+        return [evalpos, 0]
     else:
-        if couleur=="B":
+        if couleur=="N":
             valeur=-10000
-            coup=[-1, -1]
-            couppos=deppossibles(echiquier, couleur)
-            for coups in couppos:
-                caseoriginelle=coups[1]
-                couppospiece=coups[2]
-                for j in couppospiece:
-                    echiquierbis=deepcopy(echiquier)
-                    deplacerpieceinfo(caseoriginelle, j, echiquierbis)
-                    minmaxj=minimax(profondeur-1, echiquierbis, "N", dico)
-                    valeurbis=minmaxj[0]
-                    if valeurbis>valeur:
-                        valeur=valeurbis
-                        coup=[caseoriginelle, j]
-                dico[string]=[valeur, coup]
-                return [valeur, coup]
-        else:
-            valeur=10000
             coup=[-1, -1]
             couppos=deppossibles(echiquier, couleur)
             for coups in couppos:
@@ -981,12 +969,33 @@ def minimax(profondeur, echiquier, couleur, dico):
                     deplacerpieceinfo(caseoriginelle, j, echiquierbis)
                     minmaxj=minimax(profondeur-1, echiquierbis, "B", dico)
                     valeurbis=minmaxj[0]
+                    if valeurbis>valeur:
+                        valeur=valeurbis
+                        coup=[caseoriginelle, j]
+                dico[string]=[valeur, profondeur]
+            return [valeur, coup]
+        else:
+            valeur=10000
+            coup=[-1, -1]
+            couppos=deppossibles(echiquier, couleur)
+            for coups in couppos:
+                caseoriginelle=coups[1]
+                couppospiece=coups[2]
+                for j in couppospiece:
+                    echiquierbis=deepcopy(echiquier)
+                    deplacerpieceinfo(caseoriginelle, j, echiquierbis)
+                    minmaxj=minimax(profondeur-1, echiquierbis, "N", dico)
+                    valeurbis=minmaxj[0]
                     if valeurbis<valeur:
                         valeur=valeurbis
                         coup=[caseoriginelle, j]
-                dico[string]=[valeur, coup]
-                return [valeur, coup]
+                dico[string]=[valeur, profondeur]
+            return [valeur, coup]
         return
+#remarque : erreur d'indentation probable, considerer le cas ou on est dejà dans le dictionnaire
+
+
+
 """signature : int, tableau, string, dictionnaire -> [int, *[int, int]]
 remarque : dans le cas où coup=[-1, -1], alors aucun coup n'est joué
 problème à corriger dans le code"""
