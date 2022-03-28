@@ -514,7 +514,7 @@ def deplacementpioninfo(i, echiquier):
         if echiquier[ja]==[]:
             dep+=[ja]
         jg=dargi(i)
-        if jg!="Erreur" and len(echiquier[jg])==2 and echiquier[jd][1]=="B":
+        if jg!="Erreur" and len(echiquier[jg])==2 and echiquier[jg][1]=="B":
             dep+=[jg]
         jd=dardi(i)
         if jd!="Erreur" and len(echiquier[jd])==2 and echiquier[jd][1]=="B":
@@ -946,52 +946,56 @@ from copy import deepcopy
 def minimax(profondeur, echiquier, couleur, dico):
     identite=identifiant(echiquier)
     string=str(identite)
-    if string in dico:
+    bool=string in dico
+    if bool:
         [valeur, profondeurb]=dico[string]
         if profondeur==0:
             return [valeur, profondeurb]
         if abs(valeur)==10000:
             return [valeur, profondeurb]
-    if profondeur==0 or victoire(echiquier)[0]:             #remarque : ce cas sera très rare, puisqu'a priori on a déjà evalué la position dans dico au coup précedent
+    if not bool and (profondeur==0 or victoire(echiquier)[0]):             #remarque : ce cas sera très rare, puisqu'a priori on a déjà evalué la position dans dico au coup précedent
         evalpos=evalpos1(echiquier)
         dico[string]=[evalpos1, 0]
         return [evalpos, 0]
+    if couleur=="N":
+        valeur=-10000
+        coup=[-1, -1]
+        couppos=deppossibles(echiquier, couleur)
+        for coups in couppos:
+            caseoriginelle=coups[1]
+            couppospiece=coups[2]
+            for j in couppospiece:
+                echiquierbis=deepcopy(echiquier)
+                deplacerpieceinfo(caseoriginelle, j, echiquierbis)
+                minmaxj=minimax(profondeur-1, echiquierbis, "B", dico)
+                valeurbis=minmaxj[0]
+                if type(valeurbis)!=type(0):
+                    return 0,echiquierbis
+                if valeurbis>valeur:
+                    valeur=valeurbis
+                    coup=[caseoriginelle, j]
+            dico[string]=[valeur, profondeur]
+        return [valeur, coup]
     else:
-        if couleur=="N":
-            valeur=-10000
-            coup=[-1, -1]
-            couppos=deppossibles(echiquier, couleur)
-            for coups in couppos:
-                caseoriginelle=coups[1]
-                couppospiece=coups[2]
-                for j in couppospiece:
-                    echiquierbis=deepcopy(echiquier)
-                    deplacerpieceinfo(caseoriginelle, j, echiquierbis)
-                    minmaxj=minimax(profondeur-1, echiquierbis, "B", dico)
-                    valeurbis=minmaxj[0]
-                    if valeurbis>valeur:
-                        valeur=valeurbis
-                        coup=[caseoriginelle, j]
-                dico[string]=[valeur, profondeur]
-            return [valeur, coup]
-        else:
-            valeur=10000
-            coup=[-1, -1]
-            couppos=deppossibles(echiquier, couleur)
-            for coups in couppos:
-                caseoriginelle=coups[1]
-                couppospiece=coups[2]
-                for j in couppospiece:
-                    echiquierbis=deepcopy(echiquier)
-                    deplacerpieceinfo(caseoriginelle, j, echiquierbis)
-                    minmaxj=minimax(profondeur-1, echiquierbis, "N", dico)
-                    valeurbis=minmaxj[0]
-                    if valeurbis<valeur:
-                        valeur=valeurbis
-                        coup=[caseoriginelle, j]
-                dico[string]=[valeur, profondeur]
-            return [valeur, coup]
-        return
+        valeur=10000
+        coup=[-1, -1]
+        couppos=deppossibles(echiquier, couleur)
+        for coups in couppos:
+            caseoriginelle=coups[1]
+            couppospiece=coups[2]
+            for j in couppospiece:
+                echiquierbis=deepcopy(echiquier)
+                deplacerpieceinfo(caseoriginelle, j, echiquierbis)
+                minmaxj=minimax(profondeur-1, echiquierbis, "N", dico)
+                valeurbis=minmaxj[0]
+                if type(valeurbis)!=type(0):
+                    return 1,echiquierbis
+                if valeurbis<valeur:
+                    valeur=valeurbis
+                    coup=[caseoriginelle, j]
+            dico[string]=[valeur, profondeur]
+        return [valeur, coup]
+    return
 #remarque : erreur d'indentation probable, considerer le cas ou on est dejà dans le dictionnaire
 
 
