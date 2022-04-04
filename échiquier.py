@@ -955,7 +955,7 @@ def minimax(profondeur, echiquier, couleur, dico):
             return [valeur, profondeurb]
     if not bool and (profondeur==0 or victoire(echiquier)[0]):             #remarque : ce cas sera très rare, puisqu'a priori on a déjà evalué la position dans dico au coup précedent
         evalpos=evalpos1(echiquier)
-        dico[string]=[evalpos1, 0]
+        dico[string]=[evalpos, 0]
         return [evalpos, 0]
     if couleur=="N":
         valeur=-10000
@@ -966,6 +966,8 @@ def minimax(profondeur, echiquier, couleur, dico):
             couppospiece=coups[2]
             for j in couppospiece:
                 echiquierbis=deepcopy(echiquier)
+                if type(caseoriginelle)!=type(4) or type(j)!=type(4):
+                    return caseoriginelle, j
                 deplacerpieceinfo(caseoriginelle, j, echiquierbis)
                 minmaxj=minimax(profondeur-1, echiquierbis, "B", dico)
                 valeurbis=minmaxj[0]
@@ -985,6 +987,8 @@ def minimax(profondeur, echiquier, couleur, dico):
             couppospiece=coups[2]
             for j in couppospiece:
                 echiquierbis=deepcopy(echiquier)
+                if type(caseoriginelle)!=type(4) or type(j)!=type(4):
+                    return caseoriginelle, j
                 deplacerpieceinfo(caseoriginelle, j, echiquierbis)
                 minmaxj=minimax(profondeur-1, echiquierbis, "N", dico)
                 valeurbis=minmaxj[0]
