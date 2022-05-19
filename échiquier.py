@@ -1013,8 +1013,8 @@ problème à corriger dans le code"""
 
 """On attaque maintenat la partie du problème où on regarde le jeu d'échecs classique"""
 
-def echecs(echiquier, couleur):
-    return bool
+#def echecs(echiquier, couleur):
+#    return bool
 
 """vérifie si le roi de la couleur mentionnee est en échec dans la position atteinte"""
 
@@ -1051,5 +1051,93 @@ def jouer(couleur):
 
 """fonction permettant au joueur de jouer contre l'IA
 prise en compte de la règle des 50 coups (si 50 coups joué sans deplacements de pion ou piece prise alors partie nulle"""
+
+
+###echiquier amelioré
+
+"""Afin de prendre en compte les nouvelles règles, à l'echiquier de base on rajoute qques informations pour former un tableau, appelé echbis dans les fonctions qui suivent, contenant :
+echbis = [echiquier, boolrb, boolrn, booltb1, booltb2, booltn1, bootn2, boolb0, ..., boolb8, booln1, ..., booln8, compteur], servant à
+boolrb, boolrn verifient si le roi n'a pas bouger, booltx verifiant si les tours n'ont pas bougé (afin d'autoriser le roque), boolb1-8 et booln1-8 disent si les pions ont avancé de deux cases (afin de permettre la prise en passant) et le compteur permet de vérifier la règle des 50 coups"""
+
+def Creationsechibisplein():
+    echiquier=Creationechequierplein()
+    echbis=[echiquier, True, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,0]
+    return echbis
+
+"""crée un echbis complet"""
+
+
+### Regles ameliorées
+
+def trouverroi(echiquier, couleur):
+    for i in range(64):
+        case=echiquier[i]
+        if case==["R", couleur]:
+                return i
+    return "Erreur"
+
+"""trouve le roi de la couleur correspondante sur l'echiquier et renvoie sur quelle case il se trouve"""
+
+def menacecase(depposs, i):
+    for deppiece in deposs:
+        for j in deposs[2]:
+            if i==j:
+                return True
+    return False
+
+"""deposs est le resultat de la fonction depposibles, la fonction menace case vérifie si le joueur adverse peut menacer la case correspondante (utile dans le cas du roque et de la verification des echecs"""
+
+def couleuropp(couleur):
+    if couleur=="B":
+        return "N"
+    else:
+        return "B"
+
+"""renvoie la couleur opposée"""
+
+
+def echecs(couleur, echbis):
+    echiquier=echbis[0]
+    couleurop=couleuropp(couleur)
+    dep=deppossibles(echiquier, couleurop)
+    i=trouverroi(echiquier, couleur)
+    for deppiece in dep:
+        for j in deppiece[2]:
+            if i==j:
+                return True
+    return False
+
+def roq(couleur, echbis, touri):
+    echiquier=echbis[0]
+    """touri correspond à la case de la tour qu'on veut faire roquer"""
+    dep=deppossibles(echiquier, couleuropp(couleur))
+    if touri==0:
+        if echbis[1] and echbis[3]:
+            if menacecase(dep, 2) or menacecase(dep, 3):
+                return False
+            else:
+                return True
+    if touri==7:
+        if echbis[1] and echbis[4]:
+            if menacecase(dep, 5) or menacecase(dep, 6):
+                return False
+            else:
+                return True
+    if touri==56:
+        if echbis[2] and echbis[5]:
+            if menacecase(dep, 58) or menacecase(dep, 59):
+                return False
+            else:
+                return True
+    if touri==63:
+        if echbis[2] and echbis[6]:
+            if menacecase(dep, 62) or menacecase(dep, 61):
+                return False
+            else:
+                return True
+
+def priseenpassant(i, j, couleur, echbis):
+    return
+
 
 
