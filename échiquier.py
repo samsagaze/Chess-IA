@@ -863,6 +863,7 @@ def deplacementsroiinfo(i, echiquier):
             dep+=[arg]
     return dep
 
+
 ### Deplacements possibles
 
 
@@ -1136,8 +1137,133 @@ def roq(couleur, echbis, touri):
             else:
                 return True
 
-def priseenpassant(i, j, couleur, echbis):
+"""dit si le roi de la couleur peut roquer avec la tour sur la case touri"""
+
+def peutroquer(couleur, echbis):
+    rep=[]
+    if couleur=="B":
+        if roq(couleur, echbis, 0):
+            rep+=[0]
+        if roq(couleur, echbis, 7):
+            rep+=[7]
+    rep=[]
+    if couleur=="N":
+        if roq(couleur, echbis, 56):
+            rep+=[56]
+        if roq(couleur, echbis, 63):
+            rep+=[63]
+    return rep
+
+"""renvoie avec quelle tour le roi peut se déplacer"""
+
+def prepriseenpassant(i, j, couleur, echbis):
+    jbis=j//8
+    if couleur=="N":
+        if i//8==3:
+            if echbis[6 + jbis]:
+                return True
+            else:
+                return False
+    else:
+        if i//8==4:
+            if echbis[14 +jbis]:
+                return True
+            else:
+                return False
+    return False
+
+"""teste si le pion en i peut prendre en passant en j"""
+
+def priseenpassant(i, couleur, echbis):
+    ibis==i%2
+    rep=[]
+    if couleur=="N" and i//8==3:
+        if ibis!=0:
+            j1=15+ibis
+            if prepriseenpassant(i, j1, couleur, echbis):
+                rep+=[j1]
+        if ibis!=7:
+            j2=17+ibis
+            if prepriseenpassant(i, j2, couleur, echbis):
+                rep+=[j2]
+    if couleur=="B" and i//8==4:
+        if ibis!=0:
+            j1=39+ibis
+            if prepriseenpassant(i, j1, couleur, echbis):
+                rep+=[j1]
+        if ibis!=7:
+            j2=41+ibis
+            if prepriseenpassant(i, j2, couleur, echbis):
+                rep+=[j2]
+    return rep
+
+"""teste si le pion en i peut prendre en passant qqpart, renvoie ou il peut prendre"""
+
+def priseenpassant1(i, echbis):
+    echiquier=echbis[0]
+    case=echiquier[i]
+    couleur=case[1]
+    return priseenpassant(i, couleur, echbis)
+
+def deplacementameliore(echbis, couleur):
+    echiquier=echbis[0]
+    res=[]
+    for i in range(64):
+        case=echiquier[i]
+        if len(case)==2 and case[1]==couleur:
+            x=case[0]
+            if x=="P":
+                deppion==deplacementpioninfo(i, echiquier)
+                deppion+=priseenpassant1(i, echbis)
+                if couleur=="B" and i//8==1:
+                    if echiquier[i+8]==[] and echiquier[i+16]==[]:
+                        deppion+=[i+16]
+                if couleur=="N" and i//8==7:
+                    if echiquier[i-8]==[] and echiquier[i-16]==[]:
+                        deppion+=[i-16]
+                res+=[["P", i, deppion]]
+            elif x=="C":
+                res+=[["C", i, deplacementscavalierinfo(i, echiquier)]]
+            elif x=="F":
+                res+=[["F", i, deplacementsfouinfo(i, echiquier)]]
+            elif x=="T":
+                res+=[["T", i, deplacementstourinfo(i, echiquier)]]
+            elif x=="R":
+                deproi=deplacementsroiinfo(i, echiquier)
+                deproi+=peutroquer(couleur, echbis)
+                res+=[["R", i, deproi]]
+            elif x=="D":
+                res+=[["D", i, deplacementsdameinfo(i, echiquier)]]
+    return res
+
+"""renvoie un tableau de type [deplacementspiece1, deplacementspiece2...] où deplacementspiece est un tableau de la forme [type de la piece, emplacement de la piece, [tableau des endroits ou la piece peut aller]"""
+
+def verificationcouproq(piece, i, j, couleur):
+    if piece=="R":
+        if abs(j-i)==2:
+            if couleur=="B":
+                if j=="0":
+                    return [3, 0]
+                if j=="7":
+                    return [5, 7]
+            if couleur==[N]:
+                if j==63:
+                    return [61, 63]
+                if j==56:
+                    return [59, 56]
+    return False
+
+""" Verifie si le coup est un roque ou non, et si oui renvoie les cases d'arrivée puis de depart de la tour"""
+
+def jouercoup(i, j, echbis):
+    [piece, couleur]=echbis[0][i]
+    if verificationcouproq(piece, i, j, couleur)!=False:
+        [itarr, itdep]=verificationcouproq(piece, i, j, couleur)
+        echbis[0][itarr]=echbis[0][itdep]
+        echbis[0][itdep]=[]
+    echbis[0][j]=echbis[0][i]
+    echbis[0][i]=[]
     return
 
-
+"""permet de jouer un coup sur l'echiquier"""
 
