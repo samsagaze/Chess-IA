@@ -140,6 +140,16 @@ def identifiant(echiquier):
                         id+=j*(6**(2*i+1))
     return id
 
+def stringtotab(str):
+    tab=[]
+    for i in str:
+        tab+=[i]
+    tab[1]=int(tab[1])
+    return tab
+
+"""convertit un double de type "xn", avec x une lettre et n un chiffre, en tableau [x, n]"""
+
+
 """signature : tableau ->int
 attribue un identifiant unique (demontrable facilement) à chaque position possible
 essentielle pour le hash"""
@@ -635,6 +645,8 @@ def deplacementsfoudevantgaucheinfo(i, echiquier):
                 return dep
             else:
                 return dep+[jhg]
+        dep+=[jhg]
+    return dep
 
 def deplacementsfoudevantdroiteinfo(i, echiquier):
     dep=[]
@@ -652,6 +664,8 @@ def deplacementsfoudevantdroiteinfo(i, echiquier):
                 return dep
             else:
                 return dep+[jhd]
+        dep+=[jhd]
+    return dep
 
 
 def deplacementsfouarrieredroiteinfo(i, echiquier):
@@ -670,6 +684,8 @@ def deplacementsfouarrieredroiteinfo(i, echiquier):
                 return dep
             else:
                 return dep+[jbd]
+        dep+=[jbd]
+    return dep
 
 def deplacementsfouarrieregaucheinfo(i, echiquier):
     dep=[]
@@ -687,6 +703,8 @@ def deplacementsfouarrieregaucheinfo(i, echiquier):
                 return dep
             else:
                 return dep+[jbg]
+        dep+=[jbg]
+    return dep
 
 def deplacementsfouinfo(i, echiquier):
     dep=[]
@@ -721,6 +739,7 @@ def deplacementstouravantinfo(i, echiquier):
                 return dep
             else:
                 return dep+[jav]
+        dep+=[jav]
 
 def deplacementstourarriereinfo(i, echiquier):
     dep=[]
@@ -738,6 +757,7 @@ def deplacementstourarriereinfo(i, echiquier):
                 return dep
             else:
                 return dep+[jar]
+        dep+=[jar]
 
 def deplacementstourdroiteinfo(i, echiquier):
     dep=[]
@@ -755,6 +775,7 @@ def deplacementstourdroiteinfo(i, echiquier):
                 return dep
             else:
                 return dep+[jd]
+        dep+=[jd]
 
 def deplacementstourgaucheinfo(i, echiquier):
     dep=[]
@@ -772,6 +793,7 @@ def deplacementstourgaucheinfo(i, echiquier):
                 return dep
             else:
                 return dep+[jg]
+        dep+=[jg]
 
 def deplacementstourinfo(i, echiquier):
     dep=[]
@@ -1079,7 +1101,7 @@ def trouverroi(echiquier, couleur):
 
 """trouve le roi de la couleur correspondante sur l'echiquier et renvoie sur quelle case il se trouve"""
 
-def menacecase(depposs, i):
+def menacecase(deposs, i):
     for deppiece in deposs:
         for j in deposs[2]:
             if i==j:
@@ -1107,6 +1129,8 @@ def echecs(couleur, echbis):
             if i==j:
                 return True
     return False
+
+"""renvoie True si le roi est en echecs"""
 
 def roq(couleur, echbis, touri):
     echiquier=echbis[0]
@@ -1175,7 +1199,7 @@ def prepriseenpassant(i, j, couleur, echbis):
 """teste si le pion en i peut prendre en passant en j"""
 
 def priseenpassant(i, couleur, echbis):
-    ibis==i%2
+    ibis=i%2
     rep=[]
     if couleur=="N" and i//8==3:
         if ibis!=0:
@@ -1213,12 +1237,12 @@ def deplacementameliore(echbis, couleur):
         if len(case)==2 and case[1]==couleur:
             x=case[0]
             if x=="P":
-                deppion==deplacementpioninfo(i, echiquier)
+                deppion=deplacementpioninfo(i, echiquier)
                 deppion+=priseenpassant1(i, echbis)
                 if couleur=="B" and i//8==1:
                     if echiquier[i+8]==[] and echiquier[i+16]==[]:
                         deppion+=[i+16]
-                if couleur=="N" and i//8==7:
+                if couleur=="N" and i//8==6:
                     if echiquier[i-8]==[] and echiquier[i-16]==[]:
                         deppion+=[i-16]
                 res+=[["P", i, deppion]]
@@ -1230,6 +1254,8 @@ def deplacementameliore(echbis, couleur):
                 res+=[["T", i, deplacementstourinfo(i, echiquier)]]
             elif x=="R":
                 deproi=deplacementsroiinfo(i, echiquier)
+                if deproi=="Erreur":
+                    deproi=[]
                 deproi+=peutroquer(couleur, echbis)
                 res+=[["R", i, deproi]]
             elif x=="D":
@@ -1255,7 +1281,7 @@ def verificationcouproq(piece, i, j, couleur):
 
 """ Verifie si le coup est un roque ou non, et si oui renvoie les cases d'arrivée puis de depart de la tour"""
 
-def jouercoup(i, j, echbis):
+def jouercoupinfo(i, j, echbis):
     [piece, couleur]=echbis[0][i]
     if verificationcouproq(piece, i, j, couleur)!=False:
         [itarr, itdep]=verificationcouproq(piece, i, j, couleur)
@@ -1263,7 +1289,130 @@ def jouercoup(i, j, echbis):
         echbis[0][itdep]=[]
     echbis[0][j]=echbis[0][i]
     echbis[0][i]=[]
+    if piece=="P":
+        if couleur=="B":
+            if j//8==7:
+                piecebis=input("Promotion en quelle pièce ?")
+                echbis[0][j]=[piecebis, couleur]
+            else:
+                if abs(i-j)==16:
+                    echbis[7+i%8]=True
+                if i//8==4 and echbis[j%8+15]:
+                    echbis[0][j-8]=[]
+        else:
+            if j//8==0:
+                piecebis=input("Promotion en quelle pièce ?")
+                echbis[0][j]=[piecebis, couleur]
+            else:
+                if abs(i-j)==16:
+                    echbis[15+i%8]=True
+                if i//8==3 and echbis[j%8+7]:
+                    echbis[0][j+8]=[]
+
     return
 
 """permet de jouer un coup sur l'echiquier"""
+
+def jouercoupechiq(coordi, coordj, echbis):
+    i=Coordechequiennestocoordinfo(coordi)
+    j=Coordechequiennestocoordinfo(j)
+    jouercoupinfo(i, j, echbis)
+    return
+
+"""meme fonction, mais en coordonnées echiqueenes"""
+
+def mat(echbis, couleur):
+    echiquier=echbis[0]
+    bool=echecs(couleur, echbis)
+    if bool==False:
+        return False
+    dep=deplacementameliore(echbis, couleur)
+    for deppiece in dep:
+        for j in deppiece[2]:
+            echbissec=deepcopy(echbis)
+            if not echecs(couleur, echbissec):
+                return False
+    return True
+
+"""verifie si le joueur de la couleur est en echecs et mat"""
+
+def pat(echbis, couleur):
+    if echecs(couleur, echbis):
+        return False
+    dep=deplacementameliore(echbis, couleur)
+    for deppiece in dep:
+        for j in deppiece[2]:
+            echbissec=deepcopy(echbis)
+            if not echecs(couleur, echbissec):
+                return False
+    return True
+
+"""vérifie si le joueur de la couleur est en pat"""
+
+def couplégal(i, j, echbis, couleur):
+    dep=deplacementameliore(echbis, couleur)
+    for deppiece in dep:
+        if deppiece[1]==i:
+            for arr in deppiece[2]:
+                if arr==j:
+                    echbistier=deepcopy(echbis)
+                    jouercoupinfo(i, j, echbistier)
+                    if echecs(couleur, echbistier):
+                        return False
+                    else:
+                        return True
+    return False
+
+
+
+
+def jouerhumvshum():
+    echbis=Creationsechibisplein()
+    couleur="B"
+    while True:
+        if echbis[22]==50:
+            return "Partie nulle"
+        coorddep=input("Quelle pièce voulez vous déplacer - mettez un doublet sous la forme de xn ou x est un string et n un chiffre")
+        coorddep=stringtotab(coorddep)
+        coordarr=input("Où voulez vous déplacer - mettez un doublet sous la forme de xn ou x est un string et n un chiffre")
+        coordarr=stringtotab(coordarr)
+        i=Coordechequiennestocoordinfo(coorddep)
+        j=Coordechequiennestocoordinfo(coordarr)
+        bool=couplégal(i, j, echbis, couleur)
+        while not bool:
+            print("Coup non légal")
+            coorddep=stringtotab(input("Quelle pièce voulez vous déplacer - mettez un tableau de la forme [x, n] ou x est un string et n un chiffre"))
+            coordarr=stringtotab(input("Où voulez vous déplacer - mettez un tableau de la forme [x, n] ou x est un string et n un chiffre"))
+            i=Coordechequiennestocoordinfo(coorddep)
+            j=Coordechequiennestocoordinfo(coordarr)
+            bool=couplégal(i, j, echbis, couleur)
+        if echbis[0][i][1]!="P" and echbis[0][j]==[]:
+            echbis[22]+=1
+
+        else:
+            echbis[22]=0
+        jouercoupinfo(i, j, echbis)
+        couleur=couleuropp(couleur)
+        print(echbis[0])
+        if couleur=="B":
+            for k in range(8):
+                echbis[15+k]=True
+        else:
+            for k in range(8):
+                echbis[7+k]=True
+        if mat(echbis, couleur):
+            if couleur=="B":
+                return "Victoire des noirs"
+            else:
+                return "Victoire des blancs"
+        else:
+            if pat(echbis, couleur):
+                return "Partie nulle"
+
+
+
+"""Remarque : pour déplacer une pièce on rentre d'abord ses coordonnées de départ puis ses coordonnées d'arrivée"""
+
+
+
 
