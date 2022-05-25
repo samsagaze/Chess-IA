@@ -12,6 +12,9 @@ coords=[colonne, ligne], avec colonne type string et ligne type int
 """Variables utiles : """
 
 pieces = ["P", "C", "F", "T", "R", "D"]
+valpiecesechecs=[10, 29, 31, 50, 10000, 100]
+
+"""remarque : la valeur du roi est infini - mais negligeable devant les valeurs d'alpha et beta"""
 
 ##Création d'un échiquier vide et coordonnées
 
@@ -1272,7 +1275,7 @@ def verificationcouproq(piece, i, j, couleur):
                     return [3, 0]
                 if j=="7":
                     return [5, 7]
-            if couleur==[N]:
+            if couleur=="N":
                 if j==63:
                     return [61, 63]
                 if j==56:
@@ -1370,7 +1373,7 @@ def jouerhumvshum():
     echbis=Creationsechibisplein()
     couleur="B"
     while True:
-        if echbis[22]==50:
+        if echbis[22]>=50:
             return "Partie nulle"
         coorddep=input("Quelle pièce voulez vous déplacer - mettez un doublet sous la forme de xn ou x est un string et n un chiffre")
         coorddep=stringtotab(coorddep)
@@ -1393,7 +1396,7 @@ def jouerhumvshum():
             echbis[22]=0
         jouercoupinfo(i, j, echbis)
         couleur=couleuropp(couleur)
-        print(echbis[0])
+        interfacegraphique(echbis[0])
         if couleur=="B":
             for k in range(8):
                 echbis[15+k]=True
@@ -1413,8 +1416,281 @@ def jouerhumvshum():
 
 """Remarque : pour déplacer une pièce on rentre d'abord ses coordonnées de départ puis ses coordonnées d'arrivée"""
 
+def evalboard(echbis, couleur, joueurmax):
+    echiquier=echbis[0]
+    eval=0
+    if echbis[22]>=50:
+        return 0
+    elif mat(echbis, couleur):
+        if joueurmax:
+            return -50000
+        else:
+            return 50000
+    elif pat(echbis, couleur):
+        return 0
+    for cases in echbis:
+        if cases!=[]:
+            piece=cases[0]
+            valpiece=0
+            for i in range(pieces):
+                if pieces[i]==piece:
+                    if cases[1]=="B":
+                        eval+=valpiecesechecs[i]
+                    else:
+                        eval-=valpiecesechecs[i]
+    if (joueurmax and couleur=="B") or ((not joueurmax) and couleur=="N"):
+        return eval
+    else:
+        return -eval
+
+def alphabetepruning(echbis, profondeurmax, profondeur, joueurmax, alpha, beta, couleur, dico):
+    if profondeur==0:
+        echiquier=echbis[0]
+        id=identifiant(echiquier)
+        if id in dico:
+            return dico[id]
+        else:
+            eval=evalboard(echbis, joueurmax, couleur)
+            dico[id]=eval
+            return eval
+    else:
+        if joueurmax:
+            scoremax=-1000000
+            #score max innateignable
+            deppos=deplacementameliore(echbis, couleur)
+            for dep in deppos:
+                for j in dep[2]:
+                    echbisprime=deepcopy(echbis)
+                    jouercoupinfo(dep[1], j, echbisprime)
+                    echiquier=echbisprime[0]
+                    id=identifiant(echiquier)
+                    scoreposition=alphabetepruning(echbisprime, profondeurmax, profondeur-1, False, alpha, beta, couleuropp(couleur), dico)
+                    if scoreposition>scoremax:
+                        scoremax=scoreposition
+                    alpha=max(scoremax, alpha)
+                    if beta<=alpha:
+                        return scoremax
+            return scoremax
+        else:
+            scoremin=1000000
+            deppos=deplacementameliore(echbis, couleur)
+            for dep in deppos:
+                for j in dep[2]:
+                    echbisprime=deepcopy(echbis)
+                    jouercoupinfo(dep[1], j, echbisprime)
+                    scoreposition=alphabetepruning(echbisprime, profondeurmax, profondeur-1, True, alpha, beta, couleuropp(couleur), dico)
+                    if scoreposition<scoremin:
+                        scoremin=scoreposition
+                    beta=min(scoremin, alpha)
+                    if beta<=alpha:
+                        return scoremin
+            return scoremin
+
+def meilleurcoup(echbis, profondeur, couleur, alpha, beta, joueurmax, dico):
+    coupscoremax=-1000000
+    coup=[-1, -1]
+    deppos=deplacementameliore(echbis, couleur)
+    for dep in deppos:
+        for j in dep[2]:
+            echbistier=deepcopy(echbis)
+            jouercoupinfo(dep[1], j, echbistier)
+            coupscore=alphabetepruning(echbistier, profondeur, profondeur, joueurmax, alpha, beta, couleur, dico)
+            if coupscore>coupscoremax:
+                coupscoremax=coupscore
+                coup=[dep[1], j]
+    return coup
+
+def jouerhumvsia():
+    verif=False
+    while not verif:
+        couleur=input("couleur ?")
+        if couleur=="B" or couleur=="N":
+            verif=True
+    dico={}
+    echbis=Creationsechibisplein()
+    #on repond N ou B
+    if couleur=="B":
+        while True:
+            if couleur=="B":
+                if echbis[22]>=50:
+                    return "Partie nulle"
+                coorddep=input("Quelle pièce voulez vous déplacer - mettez un doublet sous la forme de xn ou x est un string et n un chiffre")
+                coorddep=stringtotab(coorddep)
+                coordarr=input("Où voulez vous déplacer - mettez un doublet sous la forme de xn ou x est un string et n un chiffre")
+                coordarr=stringtotab(coordarr)
+                i=Coordechequiennestocoordinfo(coorddep)
+                j=Coordechequiennestocoordinfo(coordarr)
+                bool=couplégal(i, j, echbis, couleur)
+                while not bool:
+                    print("Coup non légal")
+                    coorddep=stringtotab(input("Quelle pièce voulez vous déplacer - mettez un tableau de la forme [x, n] ou x est un string et n un chiffre"))
+                    coordarr=stringtotab(input("Où voulez vous déplacer - mettez un tableau de la forme [x, n] ou x est un string et n un chiffre"))
+                    i=Coordechequiennestocoordinfo(coorddep)
+                    j=Coordechequiennestocoordinfo(coordarr)
+                    bool=couplégal(i, j, echbis, couleur)
+                if echbis[0][i][1]!="P" and echbis[0][j]==[]:
+                    echbis[22]+=1
+
+                else:
+                    echbis[22]=0
+                jouercoupinfo(i, j, echbis)
+                couleur=couleuropp(couleur)
+                interfacegraphique(echbis[0])
+                if couleur=="B":
+                    for k in range(8):
+                        echbis[15+k]=True
+                else:
+                    for k in range(8):
+                        echbis[7+k]=True
+                if mat(echbis, couleur):
+                    if couleur=="B":
+                        return "Victoire des noirs"
+                    else:
+                        return "Victoire des blancs"
+                else:
+                    if pat(echbis, couleur):
+                        return "Partie nulle"
+            else:
+                if couleur=="N":
+                    maxcoup=meilleurcoup(echbis, 3, couleur, -100000, 100000, True, dico)
+                    [i, j]=maxcoup
+                    jouercoupinfo(i, j, echbis)
+                    if echbis[0][i]!= [] and echbis[0][i][1]!="P" and echbis[0][j]==[]:
+                        echbis[22]+=1
+
+                    else:
+                        echbis[22]=0
+                    couleur=couleuropp(couleur)
+                    interfacegraphique(echbis[0])
+                    if couleur=="B":
+                        for k in range(8):
+                            echbis[15+k]=True
+                    else:
+                        for k in range(8):
+                            echbis[7+k]=True
+                    if mat(echbis, couleur):
+                        if couleur=="B":
+                            return "Victoire des noirs"
+                        else:
+                            return "Victoire des blancs"
+                    else:
+                        if pat(echbis, couleur):
+                            return "Partie nulle"
+    else:
+        while True:
+            if couleur=="N":
+                if echbis[22]>=50:
+                    return "Partie nulle"
+                coorddep=input("Quelle pièce voulez vous déplacer - mettez un doublet sous la forme de xn ou x est un string et n un chiffre")
+                coorddep=stringtotab(coorddep)
+                coordarr=input("Où voulez vous déplacer - mettez un doublet sous la forme de xn ou x est un string et n un chiffre")
+                coordarr=stringtotab(coordarr)
+                i=Coordechequiennestocoordinfo(coorddep)
+                j=Coordechequiennestocoordinfo(coordarr)
+                bool=couplégal(i, j, echbis, couleur)
+                while not bool:
+                    print("Coup non légal")
+                    coorddep=stringtotab(input("Quelle pièce voulez vous déplacer - mettez un tableau de la forme [x, n] ou x est un string et n un chiffre"))
+                    coordarr=stringtotab(input("Où voulez vous déplacer - mettez un tableau de la forme [x, n] ou x est un string et n un chiffre"))
+                    i=Coordechequiennestocoordinfo(coorddep)
+                    j=Coordechequiennestocoordinfo(coordarr)
+                    bool=couplégal(i, j, echbis, couleur)
+                if echbis[0][i][1]!="P" and echbis[0][j]==[]:
+                    echbis[22]+=1
+
+                else:
+                    echbis[22]=0
+                jouercoupinfo(i, j, echbis)
+                couleur=couleuropp(couleur)
+                interfacegraphique(echbis[0])
+                if couleur=="B":
+                    for k in range(8):
+                        echbis[15+k]=True
+                else:
+                    for k in range(8):
+                        echbis[7+k]=True
+                if mat(echbis, couleur):
+                    if couleur=="B":
+                        return "Victoire des noirs"
+                    else:
+                        return "Victoire des blancs"
+                else:
+                    if pat(echbis, couleur):
+                        return "Partie nulle"
+            else:
+                if couleur=="B":
+                    maxcoup=meilleurcoup(echbis, 3, couleur, -100000, 100000, True)
+                    [i, j]=maxcoup
+                    jouercoupinfo(i, j, echbis)
+                    if echbis[0][i][1]!="P" and echbis[0][j]==[]:
+                        echbis[22]+=1
+
+                    else:
+                        echbis[22]=0
+                    couleur=couleuropp(couleur)
+                    interfacegraphique(echbis[0])
+                    if couleur=="B":
+                        for k in range(8):
+                            echbis[15+k]=True
+                    else:
+                        for k in range(8):
+                            echbis[7+k]=True
+                    if mat(echbis, couleur):
+                        if couleur=="B":
+                            return "Victoire des noirs"
+                        else:
+                            return "Victoire des blancs"
+                    else:
+                        if pat(echbis, couleur):
+                            return "Partie nulle"
+    return
+
+def interfacegraphique(echiquier):
+    for i in range(64):
+        if echiquier[i]==[]:
+            if i%8==7:
+                print("|       |")
+            else:
+                print("|       ", end="")
+        else:
+            [piece, couleur]=echiquier[i]
+            if i%8==7:
+                print(f"| {piece} , {couleur} |")
+            else:
+                print(f"| {piece} , {couleur} ", end="")
+    return
+
+    return
 
 
+###Test
 
+def meilleurcoupclassique(echbis, couleur, profondeur, joueurmax):
+    echiquier=echbis[0]
+    deppos=deplacementameliore(echbis, couleur)
+    coup=[]
+    if profondeur==0:
+        return evalboard(echbis, couleur, joueurmax)
+    if joueurmax:
+        score=-100000
+        for dep in deposs:
+            for j in dep[2]:
+                echbistier=deepcopy(echbis)
+                jouercoupinfo(i, j, echbistier)
+                scorepos,coup=meilleurcoupclassique(echbistier, couleuropp(couleur), profondeur-1, not joueurmax)
+                if scorepos>score:
+                    score=scorepos
+                    coup=[dep[1], j]
+    else:
+        score=100000
+        for dep in deposs:
+            for j in dep[2]:
+                echbistier=deepcopy(echbis)
+                jouercoupinfo(i, j, echbistier)
+                scorepos=meilleurcoupclassique(echbistier, couleuropp(couleur), profondeur-1, not joueurmax)
+                if scorepos<score:
+                    score=scorepos
+                    coup=[dep[1], j]
+    return score,coup
 
 
